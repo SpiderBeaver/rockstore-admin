@@ -17,7 +17,12 @@ export default function ProductsList() {
   return (
     <ul>
       {products.map((product) => (
-        <li key={product.id}>{product.name}</li>
+        <li key={product.id}>
+          {product.pictureFilename !== null ? (
+            <img src={`http://localhost:3001/uploads/${product.pictureFilename}`} alt={product.name}></img>
+          ) : null}
+          {product.name}
+        </li>
       ))}
     </ul>
   );
