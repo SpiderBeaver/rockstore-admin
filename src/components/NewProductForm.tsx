@@ -1,9 +1,31 @@
 import React, { useState } from 'react';
-import { ProductDto } from '../dto/ProductDto';
+import { useMutation, useQueryClient } from 'react-query';
+import { createProduct, productUploadPicture } from '../api/api';
+import { ProductDto } from '../api/dto/ProductDto';
 
 export default function NewProductForm() {
   const [name, setName] = useState('');
   const [file, setFile] = useState<File | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(
+    async ({ newProductName, file }: { newProductName: string; file: File | null }) => {
+      const newProduct = await createProduct({ name: newProductName });
+
+      if (file !== null) {
+        await productUploadPicture({
+          productId: newProduct.id,
+          file: file,
+        });
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('products');
+      },
+    }
+  );
 
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
@@ -12,30 +34,9 @@ export default function NewProductForm() {
       return;
     }
 
-    const response = await fetch('http://localhost:3001/products', {
-      method: 'POST',
-      body: JSON.stringify({
-        product: {
-          name: name,
-        },
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors',
-    });
-    const newProduct = (await response.json()) as ProductDto;
+    mutation.mutate({ newProductName: name, file: file });
 
-    const formData = new FormData();
-    formData.append('file', file as Blob);
-
-    const uploadUrl = `http://localhost:3001/products/${newProduct.id}/picture`;
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'POST',
-      body: formData,
-    });
-    const uploadResponseData = await uploadResponse.json();
-    console.log(uploadResponseData);
+    setName('');
   };
 
   return (
