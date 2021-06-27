@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components/macro';
 import { getProducts } from '../api/api';
@@ -29,8 +29,16 @@ const ProductImage = styled.img`
   max-height: 100%;
 `;
 
-export default function ProductsList() {
-  const productsQuery = useQuery('products', getProducts);
+const productsPerPage = 10;
+
+interface Props {
+  page?: number;
+}
+
+export default function ProductsList({ page }: Props) {
+  const limit = productsPerPage;
+  const offset = page !== undefined ? productsPerPage * (page - 1) : 0;
+  const productsQuery = useQuery(['products', page], () => getProducts(limit, offset));
 
   return (
     <ProductsListStyled>

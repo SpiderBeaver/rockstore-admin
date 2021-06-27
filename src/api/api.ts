@@ -1,11 +1,15 @@
+import axios from 'axios';
 import { ProductDto } from './dto/ProductDto';
 
-export async function getProducts() {
-  const response = await fetch('http://localhost:3001/products');
-  const products = (await response.json()) as ProductDto[];
-  return products;
+export async function getProducts(limit: number | undefined = undefined, offset: number | undefined = undefined) {
+  const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
+    params: { limit: limit, offset: offset },
+  });
+  console.log(response.config.url);
+  return response.data;
 }
 
+// TODO: Move all funcitons to axios
 export async function createProduct({ name }: { name: string }) {
   const response = await fetch('http://localhost:3001/products', {
     method: 'POST',

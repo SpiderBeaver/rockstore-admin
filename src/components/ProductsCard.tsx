@@ -12,7 +12,7 @@ export default function ProductsCard() {
   return (
     <ProductsCardStyled>
       <h2>Products</h2>
-      <ProductsList></ProductsList>
+      <ProductsList page={1}></ProductsList>
     </ProductsCardStyled>
   );
 }
