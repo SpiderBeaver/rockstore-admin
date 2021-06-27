@@ -1,13 +1,13 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import styled from 'styled-components/macro';
-import NewProductForm from './components/NewProductForm';
-import ProductsList from './components/ProductsList';
+import ProductsCard from './components/ProductsCard';
 import Sidebar from './components/Sidebar';
 
 const Layout = styled.div`
   display: grid;
   grid-template-columns: 20em auto;
+  height: 100vh;
 `;
 
 const SidebarContainer = styled.div`
@@ -17,6 +17,7 @@ const SidebarContainer = styled.div`
 const ContentContainer = styled.div`
   grid-column: 2 / 3;
   padding: 2em;
+  background-color: #e9ecff;
 `;
 
 const queryClient = new QueryClient();
@@ -29,8 +30,7 @@ function App() {
           <Sidebar></Sidebar>
         </SidebarContainer>
         <ContentContainer>
-          <ProductsList></ProductsList>
-          <NewProductForm></NewProductForm>
+          <ProductsCard></ProductsCard>
         </ContentContainer>
       </Layout>
     </QueryClientProvider>
