@@ -1,3 +1,4 @@
+import { StylesProvider } from '@material-ui/core';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import styled from 'styled-components/macro';
@@ -24,16 +25,20 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Layout>
-        <SidebarContainer>
-          <Sidebar></Sidebar>
-        </SidebarContainer>
-        <ContentContainer>
-          <ProductsCard></ProductsCard>
-        </ContentContainer>
-      </Layout>
-    </QueryClientProvider>
+    // Use inject first to properly override styles using styled-components.
+    // For details: https://material-ui.com/guides/interoperability/#controlling-priority-3
+    <StylesProvider injectFirst>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <SidebarContainer>
+            <Sidebar></Sidebar>
+          </SidebarContainer>
+          <ContentContainer>
+            <ProductsCard></ProductsCard>
+          </ContentContainer>
+        </Layout>
+      </QueryClientProvider>
+    </StylesProvider>
   );
 }
 
