@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import ProductsList from './ProductsList';
+import ProductsTable from './ProductsTable';
 
 const ProductsCardStyled = styled.div`
   background-color: #fff;
@@ -12,7 +12,7 @@ export default function ProductsCard() {
   return (
     <ProductsCardStyled>
       <h2>Products</h2>
-      <ProductsList page={1}></ProductsList>
+      <ProductsTable></ProductsTable>
     </ProductsCardStyled>
   );
 }
