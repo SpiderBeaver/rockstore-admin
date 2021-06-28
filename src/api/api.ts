@@ -63,6 +63,17 @@ export async function editProduct({ id, product }: EditProductParams) {
   }
 }
 
+export async function deleteProduct(id: number) {
+  const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/delete`);
+  if (response.status === 201) {
+    return response.data;
+  } else if (response.status === 404) {
+    return null;
+  } else {
+    // TODO: throw error
+  }
+}
+
 export async function productUploadPicture({ productId, file }: { productId: number; file: File }) {
   const formData = new FormData();
   formData.append('file', file as Blob);
