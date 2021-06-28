@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { ProductDto } from './dto/ProductDto';
 
+export async function getProductsCount() {
+  const response = await axios.get<{ count: number }>('http://localhost:3001/products/count');
+  return response.data.count;
+}
+
 export async function getProducts(limit: number | undefined = undefined, offset: number | undefined = undefined) {
   const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
     params: { limit: limit, offset: offset },
@@ -8,9 +13,15 @@ export async function getProducts(limit: number | undefined = undefined, offset:
   return response.data;
 }
 
-export async function getProductsCount() {
-  const response = await axios.get<{ count: number }>('http://localhost:3001/products/count');
-  return response.data.count;
+export async function getProduct(id: number) {
+  const response = await axios.get<ProductDto>(`http://localhost:3001/products/${id}`);
+  if (response.status === 200) {
+    return response.data;
+  } else if (response.status === 404) {
+    return null;
+  } else {
+    // TODO: throw error
+  }
 }
 
 // TODO: Move all funcitons to axios
@@ -29,6 +40,27 @@ export async function createProduct({ name }: { name: string }) {
   });
   const product = (await response.json()) as ProductDto;
   return product;
+}
+
+interface EditProductParams {
+  id: number;
+  product: {
+    name?: string;
+  };
+}
+export async function editProduct({ id, product }: EditProductParams) {
+  const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/edit`, {
+    product: {
+      name: product.name,
+    },
+  });
+  if (response.status === 201) {
+    return response.data;
+  } else if (response.status === 404) {
+    return null;
+  } else {
+    // TODO: throw error
+  }
 }
 
 export async function productUploadPicture({ productId, file }: { productId: number; file: File }) {
