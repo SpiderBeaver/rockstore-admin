@@ -6,9 +6,14 @@ export async function getProductsCount() {
   return response.data.count;
 }
 
-export async function getProducts(limit: number | undefined = undefined, offset: number | undefined = undefined) {
+export interface GetProductsParams {
+  limit?: number;
+  offset?: number;
+  searchQuery?: string;
+}
+export async function getProducts({ limit, offset, searchQuery }: GetProductsParams) {
   const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
-    params: { limit: limit, offset: offset },
+    params: { limit: limit, offset: offset, query: searchQuery },
   });
   return response.data;
 }

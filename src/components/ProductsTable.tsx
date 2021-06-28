@@ -12,12 +12,25 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components/macro';
-import { deleteProduct, getProducts, getProductsCount } from '../api/api';
+import { deleteProduct, getProducts, getProductsCount, GetProductsParams } from '../api/api';
 import { Link } from 'react-router-dom';
+import { useDebounce } from '../hooks/useDebounce';
+
+const ProductsTableRoot = styled.div`
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto auto;
+`;
+
+const ProductsTableContainer = styled(TableContainer)`
+  grid-column: 1 / 3;
+  margin-top: 20px;
+`;
 
 const ProductImage = styled.img`
   max-height: 30px;
@@ -30,11 +43,17 @@ const LowPaddingTableCell = styled(TableCell)`
 const productsPerPage = 10;
 
 export default function ProductsTable() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchQueryDebounced = useDebounce(searchQuery);
+
   const [page, setPage] = useState(0);
 
   const limit = productsPerPage;
   const offset = productsPerPage * page;
-  const productsQuery = useQuery(['products', page], () => getProducts(limit, offset), { keepPreviousData: true });
+  const getProductsParams: GetProductsParams = { limit: limit, offset: offset, searchQuery: searchQueryDebounced };
+  const productsQuery = useQuery(['products', searchQueryDebounced, page], () => getProducts(getProductsParams), {
+    keepPreviousData: true,
+  });
 
   const productsCountQuery = useQuery(['products', 'count'], getProductsCount);
 
@@ -73,7 +92,8 @@ export default function ProductsTable() {
   };
 
   return (
-    <>
+    <ProductsTableRoot>
+      <TextField label="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}></TextField>
       {productsCountQuery.status === 'success' ? (
         <TablePagination
           component="div"
@@ -83,8 +103,10 @@ export default function ProductsTable() {
           rowsPerPage={productsPerPage}
           rowsPerPageOptions={[productsPerPage]}
         ></TablePagination>
-      ) : null}
-      <TableContainer>
+      ) : (
+        <div></div>
+      )}
+      <ProductsTableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -119,7 +141,7 @@ export default function ProductsTable() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </ProductsTableContainer>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteDialogClose}>
         <DialogTitle>Delete Product</DialogTitle>
@@ -136,6 +158,6 @@ export default function ProductsTable() {
           <Button onClick={handleDeleteDialogClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
-    </>
+    </ProductsTableRoot>
   );
 }
