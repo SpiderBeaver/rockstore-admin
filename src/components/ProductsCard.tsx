@@ -1,6 +1,8 @@
+import { Button } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components/macro';
 import ProductsTable from './ProductsTable';
+import { Link } from 'react-router-dom';
 
 const ProductsCardStyled = styled.div`
   background-color: #fff;
@@ -12,6 +14,12 @@ export default function ProductsCard() {
   return (
     <ProductsCardStyled>
       <h2>Products</h2>
+      <Link to="/products/new">
+        <Button variant="contained" color="primary">
+          New Product
+        </Button>
+      </Link>
+
       <ProductsTable></ProductsTable>
     </ProductsCardStyled>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import NewProductCard from './components/NewProductCard';
 import ProductsCard from './components/ProductsCard';
 import Sidebar from './components/Sidebar';
 
@@ -37,6 +38,9 @@ function App() {
             </SidebarContainer>
             <ContentContainer>
               <Switch>
+                <Route path="/products/new">
+                  <NewProductCard></NewProductCard>
+                </Route>
                 <Route path="/products">
                   <ProductsCard></ProductsCard>
                 </Route>
