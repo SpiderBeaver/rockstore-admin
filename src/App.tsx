@@ -1,6 +1,7 @@
 import { StylesProvider } from '@material-ui/core';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import ProductsCard from './components/ProductsCard';
 import Sidebar from './components/Sidebar';
@@ -29,14 +30,23 @@ function App() {
     // For details: https://material-ui.com/guides/interoperability/#controlling-priority-3
     <StylesProvider injectFirst>
       <QueryClientProvider client={queryClient}>
-        <Layout>
-          <SidebarContainer>
-            <Sidebar></Sidebar>
-          </SidebarContainer>
-          <ContentContainer>
-            <ProductsCard></ProductsCard>
-          </ContentContainer>
-        </Layout>
+        <BrowserRouter>
+          <Layout>
+            <SidebarContainer>
+              <Sidebar></Sidebar>
+            </SidebarContainer>
+            <ContentContainer>
+              <Switch>
+                <Route path="/products">
+                  <ProductsCard></ProductsCard>
+                </Route>
+                <Route path="/">
+                  <div>Home</div>
+                </Route>
+              </Switch>
+            </ContentContainer>
+          </Layout>
+        </BrowserRouter>
       </QueryClientProvider>
     </StylesProvider>
   );

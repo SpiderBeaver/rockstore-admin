@@ -5,8 +5,12 @@ export async function getProducts(limit: number | undefined = undefined, offset:
   const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
     params: { limit: limit, offset: offset },
   });
-  console.log(response.config.url);
   return response.data;
+}
+
+export async function getProductsCount() {
+  const response = await axios.get<{ count: number }>('http://localhost:3001/products/count');
+  return response.data.count;
 }
 
 // TODO: Move all funcitons to axios

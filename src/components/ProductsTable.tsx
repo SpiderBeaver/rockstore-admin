@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components/macro';
-import { getProducts } from '../api/api';
+import { getProducts, getProductsCount } from '../api/api';
 
 const ProductImage = styled.img`
   max-height: 30px;
@@ -21,20 +21,24 @@ export default function ProductsTable() {
   const offset = productsPerPage * page;
   const productsQuery = useQuery(['products', page], () => getProducts(limit, offset), { keepPreviousData: true });
 
+  const productsCountQuery = useQuery(['products', 'count'], getProductsCount);
+
   const handlePageChange = (event: React.MouseEvent | null, page: number) => {
     setPage(page);
   };
 
   return (
     <>
-      <TablePagination
-        component="div"
-        count={120}
-        onChangePage={handlePageChange}
-        page={page}
-        rowsPerPage={productsPerPage}
-        rowsPerPageOptions={[productsPerPage]}
-      ></TablePagination>
+      {productsCountQuery.status === 'success' ? (
+        <TablePagination
+          component="div"
+          count={productsCountQuery.data}
+          onChangePage={handlePageChange}
+          page={page}
+          rowsPerPage={productsPerPage}
+          rowsPerPageOptions={[productsPerPage]}
+        ></TablePagination>
+      ) : null}
       <TableContainer>
         <Table>
           <TableHead>
