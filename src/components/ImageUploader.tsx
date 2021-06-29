@@ -23,6 +23,26 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
   const [file, setFile] = useState<File | null>(null);
   const pictureDataUrl = useReadDataUrl(file);
 
+  const handleFileDrop: React.DragEventHandler = (event) => {
+    event.preventDefault();
+    if (event.dataTransfer.items) {
+      if (event.dataTransfer.items.length > 0) {
+        const item = event.dataTransfer.items[0];
+        if (item.kind === 'file') {
+          const file = item.getAsFile()!;
+          setFile(file);
+          onImageSelect?.(file);
+        }
+      }
+    }
+  };
+
+  const handleFileDragOver: React.DragEventHandler = (event) => {
+    // Prevent default behavior (Prevent file from being opened).
+    // Yes, we need it on DragOver as well as on Drop.
+    event.preventDefault();
+  };
+
   const handleFileSelect = (file: File) => {
     setFile(file);
     onImageSelect?.(file);
@@ -30,7 +50,7 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
 
   return (
     <div>
-      <PictureContainer>
+      <PictureContainer onDrop={handleFileDrop} onDragOver={handleFileDragOver}>
         {pictureDataUrl !== null ? (
           <Picture src={pictureDataUrl}></Picture>
         ) : initialImageFilename !== undefined ? (
