@@ -27,7 +27,7 @@ export default function NewProductCard() {
     name: Yup.string().required('Required'),
     price: Yup.string()
       .required('Required')
-      .matches(/^\d+(\..+)?$/, 'Wrong format'),
+      .matches(/^\d+(\.d+)?$/, 'Wrong format'),
   });
 
   const formik = useFormik<NewProductFormValues>({

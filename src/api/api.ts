@@ -58,12 +58,14 @@ interface EditProductParams {
   id: number;
   product: {
     name?: string;
+    price?: number;
   };
 }
 export async function editProduct({ id, product }: EditProductParams) {
   const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/edit`, {
     product: {
       name: product.name,
+      price: product.price,
     },
   });
   if (response.status === 201) {

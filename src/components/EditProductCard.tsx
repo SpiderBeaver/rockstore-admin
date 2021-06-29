@@ -6,10 +6,24 @@ import styled from 'styled-components/macro';
 import { getProduct } from '../api/api';
 import { useEditProductMutation } from '../hooks/useEditProductMutation';
 import ImageUploader from './ImageUploader';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 
 const CardContainer = styled(Paper)`
   padding: 20px;
 `;
+
+interface EditProductFormValues {
+  name: string;
+  price: string;
+}
+
+const validationSchema: Yup.SchemaOf<EditProductFormValues> = Yup.object({
+  name: Yup.string().required('Required'),
+  price: Yup.string()
+    .required('Required')
+    .matches(/^\d+(\.\d+)?$/, 'Wrong format'),
+});
 
 export default function EditProductCard() {
   const { productId: productIdString } = useParams<{ productId: string }>();
@@ -19,34 +33,24 @@ export default function EditProductCard() {
 
   const history = useHistory();
 
-  const [name, setName] = useState('');
-  const [nameInputError, setNameInputError] = useState<string | null>(null);
   // File is undefined at first and becomes File or null when an image is selected or deleted.
   // This is used when we decide whether to delete an existing product picture.
   const [file, setFile] = useState<File | null | undefined>(undefined);
 
-  useEffect(() => {
-    if (product.status === 'success') {
-      setName(product.data!.name);
-    }
-  }, [product.status, product.data]);
-
   const editProductMutation = useEditProductMutation(() => history.push('/products'));
 
-  const handleSubmit: React.FormEventHandler = (e) => {
-    e.preventDefault();
-
-    if (name === '') {
-      setNameInputError("Please enter product's name");
-      return;
-    }
-    setNameInputError(null);
-
-    editProductMutation.mutate({ id: productId, name: name, file: file });
-
-    setName('');
-    setFile(null);
-  };
+  const formik = useFormik<EditProductFormValues>({
+    initialValues: {
+      name: product.data?.name ?? '',
+      price: product.data?.price.toFixed(2) ?? '',
+    },
+    enableReinitialize: true,
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const priceParsed = parseFloat(values.price);
+      editProductMutation.mutate({ id: productId, name: values.name, price: priceParsed, file: file });
+    },
+  });
 
   return (
     <CardContainer>
@@ -54,27 +58,32 @@ export default function EditProductCard() {
         <p>Loading...</p>
       ) : (
         <>
-          <h1>Edit Product {name}</h1>
-          <form onSubmit={handleSubmit}>
+          <h1>Edit Product</h1>
+
+          <form onSubmit={formik.handleSubmit}>
             <TextField
               label="Name"
-              required={true}
               variant="outlined"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              error={nameInputError !== null}
-              helperText={nameInputError}
+              {...formik.getFieldProps('name')}
+              error={formik.errors.name !== undefined && formik.touched.name}
+              helperText={formik.errors.name}
+            ></TextField>
+            <TextField
+              label="Price ($)"
+              variant="outlined"
+              {...formik.getFieldProps('price')}
+              error={formik.errors.price !== undefined && formik.touched.price}
+              helperText={formik.errors.price}
             ></TextField>
 
             <h2>Picture</h2>
-
             <ImageUploader
               onImageSelect={(file) => setFile(file)}
               initialImageFilename={product.data?.pictureFilename}
             ></ImageUploader>
 
             <Button type="submit" variant="contained" color="primary">
-              Save changes
+              Update product
             </Button>
           </form>
         </>
