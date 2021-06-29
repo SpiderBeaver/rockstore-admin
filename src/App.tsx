@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import EditProductCard from './components/EditProductCard';
 import NewProductCard from './components/NewProductCard';
+import OrdersCard from './components/OrdersCard';
 import ProductsCard from './components/ProductsCard';
 import Sidebar from './components/Sidebar';
 
@@ -47,6 +48,9 @@ function App() {
                 </Route>
                 <Route path="/products">
                   <ProductsCard></ProductsCard>
+                </Route>
+                <Route path="/orders">
+                  <OrdersCard></OrdersCard>
                 </Route>
                 <Route path="/">
                   <div>Home</div>

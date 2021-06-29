@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { OrderDto } from './dto/OrderDto';
 import { ProductDto } from './dto/ProductDto';
 
 export async function getProductsCount() {
@@ -112,4 +113,9 @@ export async function productRemovePicture(productId: number) {
     // TODO: throw error
     return null;
   }
+}
+
+export async function getOrders() {
+  const response = await axios.get<OrderDto[]>('http://localhost:3001/orders');
+  return response.data;
 }

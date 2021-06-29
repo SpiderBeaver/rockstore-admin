@@ -32,6 +32,7 @@ const NavigationLink = styled(Link)<NavigationLinkProps>`
 
 export default function Sidebar() {
   const isProducts = useRouteMatch('/products');
+  const isOrders = useRouteMatch('/orders');
   const isHome = useRouteMatch('/');
 
   return (
@@ -46,6 +47,11 @@ export default function Sidebar() {
         <NavigationItem>
           <NavigationLink to="/products" isActive={isProducts !== null}>
             Products
+          </NavigationLink>
+        </NavigationItem>
+        <NavigationItem>
+          <NavigationLink to="/orders" isActive={isOrders !== null}>
+            Orders
           </NavigationLink>
         </NavigationItem>
       </Navigation>
