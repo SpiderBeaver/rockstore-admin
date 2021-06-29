@@ -1,7 +1,9 @@
 import { Button, Paper, TextField } from '@material-ui/core';
+import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import * as Yup from 'yup';
 import { useCreateProductMutation } from '../hooks/useCreateProductMutation';
 import ImageUploader from './ImageUploader';
 
@@ -9,77 +11,55 @@ const CardContainer = styled(Paper)`
   padding: 20px;
 `;
 
+interface NewProductFormValues {
+  name: string;
+  price: string;
+}
+
 export default function NewProductCard() {
-  const [name, setName] = useState('');
-  const [nameInputError, setNameInputError] = useState<string | null>(null);
-  const [priceString, setPriceString] = useState('');
-  const [price, setPrice] = useState<number | null>(null);
-  const [priceInputError, setPriceInputError] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const history = useHistory();
 
   const createProductMutation = useCreateProductMutation(() => history.push('/products'));
 
-  const handlePriceInputBlur = () => {
-    if (priceString.trim().length === 0) {
-      setPriceInputError('Please enter price');
-      setPrice(null);
-      return;
-    }
+  const validationSchema: Yup.SchemaOf<NewProductFormValues> = Yup.object({
+    name: Yup.string().required('Required'),
+    price: Yup.string()
+      .required('Required')
+      .matches(/^\d+(\..+)?$/, 'Wrong format'),
+  });
 
-    const parsed = Number(priceString);
-    if (isNaN(parsed)) {
-      setPriceInputError('Price is in incorrect format');
-      setPrice(null);
-      return;
-    }
-
-    setPrice(parsed);
-    console.log(parsed);
-    setPriceInputError(null);
-  };
-
-  const handleSubmit: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    if (name === '') {
-      setNameInputError("Please enter product's name");
-      return;
-    }
-    setNameInputError(null);
-
-    if (price === null) {
-      return;
-    }
-
-    createProductMutation.mutate({ name: name, price: price, file: file });
-
-    setName('');
-    setFile(null);
-  };
+  const formik = useFormik<NewProductFormValues>({
+    initialValues: {
+      name: '',
+      price: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const priceParsed = parseFloat(values.price);
+      createProductMutation.mutate({ name: values.name, price: priceParsed, file: file });
+    },
+  });
 
   return (
     <CardContainer>
       <h1>New Product</h1>
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={formik.handleSubmit}>
         <TextField
           label="Name"
-          required={true}
           variant="outlined"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={nameInputError !== null}
-          helperText={nameInputError}
+          {...formik.getFieldProps('name')}
+          error={formik.errors.name !== undefined && formik.touched.name}
+          helperText={formik.errors.name}
         ></TextField>
         <TextField
           label="Price ($)"
-          required={true}
           variant="outlined"
-          value={priceString}
-          onChange={(e) => setPriceString(e.target.value)}
-          error={priceInputError !== null}
-          helperText={priceInputError}
-          onBlur={handlePriceInputBlur}
+          {...formik.getFieldProps('price')}
+          error={formik.errors.price !== undefined && formik.touched.price}
+          helperText={formik.errors.price}
         ></TextField>
 
         <h2>Picture</h2>
