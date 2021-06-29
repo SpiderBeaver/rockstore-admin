@@ -2,12 +2,27 @@ import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import { useReadDataUrl } from '../hooks/useReadDataUrl';
 import UploadFileButton from './UploadFileButton';
+import ClearIcon from '@material-ui/icons/Clear';
+
+const RemovePictureButton = styled(ClearIcon)`
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+`;
 
 const PictureContainer = styled.div`
   width: 400px;
   height: 400px;
   box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
   margin-bottom: 20px;
+  position: relative;
+  &:hover {
+    ${RemovePictureButton} {
+      display: block;
+    }
+  }
 `;
 
 const Picture = styled.img`
@@ -16,10 +31,11 @@ const Picture = styled.img`
 `;
 
 export interface ImageUploaderProps {
-  onImageSelect?: (file: File) => void;
+  onImageSelect?: (file: File | null) => void;
   initialImageFilename?: string;
 }
 export default function ImageUploader({ onImageSelect, initialImageFilename }: ImageUploaderProps) {
+  const [imageFilename, setImageFilename] = useState(initialImageFilename ?? null);
   const [file, setFile] = useState<File | null>(null);
   const pictureDataUrl = useReadDataUrl(file);
 
@@ -31,6 +47,7 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
         if (item.kind === 'file') {
           const file = item.getAsFile()!;
           setFile(file);
+          setImageFilename(null);
           onImageSelect?.(file);
         }
       }
@@ -45,7 +62,14 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
 
   const handleFileSelect = (file: File) => {
     setFile(file);
+    setImageFilename(null);
     onImageSelect?.(file);
+  };
+
+  const handleRemovePicture = () => {
+    setFile(null);
+    setImageFilename(null);
+    onImageSelect?.(null);
   };
 
   return (
@@ -53,9 +77,10 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
       <PictureContainer onDrop={handleFileDrop} onDragOver={handleFileDragOver}>
         {pictureDataUrl !== null ? (
           <Picture src={pictureDataUrl}></Picture>
-        ) : initialImageFilename !== undefined ? (
-          <Picture src={`http://localhost:3001/uploads/${initialImageFilename}`}></Picture>
+        ) : imageFilename !== null ? (
+          <Picture src={`http://localhost:3001/uploads/${imageFilename}`}></Picture>
         ) : null}
+        <RemovePictureButton onClick={handleRemovePicture}></RemovePictureButton>
       </PictureContainer>
 
       <UploadFileButton onFileSelect={handleFileSelect}></UploadFileButton>

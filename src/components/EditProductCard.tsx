@@ -21,7 +21,9 @@ export default function EditProductCard() {
 
   const [name, setName] = useState('');
   const [nameInputError, setNameInputError] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+  // File is undefined at first and becomes File or null when an image is selected or deleted.
+  // This is used when we decide whether to delete an existing product picture.
+  const [file, setFile] = useState<File | null | undefined>(undefined);
 
   useEffect(() => {
     if (product.status === 'success') {

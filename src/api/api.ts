@@ -91,3 +91,16 @@ export async function productUploadPicture({ productId, file }: { productId: num
   const uploadResponseData = await uploadResponse.json();
   return uploadResponseData;
 }
+
+export async function productRemovePicture(productId: number) {
+  const url = `http://localhost:3001/products/${productId}/picture/delete`;
+  const response = await axios.post<ProductDto>(url);
+  if (response.status === 201) {
+    return response.data;
+  } else if (response.status === 404) {
+    return null;
+  } else {
+    // TODO: throw error
+    return null;
+  }
+}
