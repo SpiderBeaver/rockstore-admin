@@ -17,8 +17,9 @@ const Picture = styled.img`
 
 export interface ImageUploaderProps {
   onImageSelect?: (file: File) => void;
+  initialImageFilename?: string;
 }
-export default function ImageUploader({ onImageSelect }: ImageUploaderProps) {
+export default function ImageUploader({ onImageSelect, initialImageFilename }: ImageUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const pictureDataUrl = useReadDataUrl(file);
 
@@ -30,7 +31,11 @@ export default function ImageUploader({ onImageSelect }: ImageUploaderProps) {
   return (
     <div>
       <PictureContainer>
-        <Picture src={pictureDataUrl}></Picture>
+        {pictureDataUrl !== null ? (
+          <Picture src={pictureDataUrl}></Picture>
+        ) : initialImageFilename !== undefined ? (
+          <Picture src={`http://localhost:3001/uploads/${initialImageFilename}`}></Picture>
+        ) : null}
       </PictureContainer>
 
       <UploadFileButton onFileSelect={handleFileSelect}></UploadFileButton>

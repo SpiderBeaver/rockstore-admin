@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function useReadDataUrl(file: File | null) {
-  const [dataUrl, setDataUrl] = useState('');
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (file !== null) {
@@ -14,7 +14,7 @@ export function useReadDataUrl(file: File | null) {
       };
       reader.readAsDataURL(file);
     } else {
-      setDataUrl('');
+      setDataUrl(null);
     }
   }, [file]);
 
