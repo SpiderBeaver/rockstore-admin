@@ -32,6 +32,14 @@ const ProductsTableContainer = styled(TableContainer)`
   margin-top: 20px;
 `;
 
+const ProductName = styled(Link)`
+  text-decoration: none;
+  color: #000000;
+  &:hover {
+    font-weight: 500;
+  }
+`;
+
 const ProductImage = styled.img`
   max-height: 30px;
 `;
@@ -119,7 +127,9 @@ export default function ProductsTable() {
           <TableBody>
             {productsQuery.data?.map((product) => (
               <TableRow key={product.id}>
-                <TableCell>{product.name}</TableCell>
+                <TableCell>
+                  <ProductName to={`/products/${product.id}/edit`}>{product.name}</ProductName>
+                </TableCell>
                 <LowPaddingTableCell>
                   {product.pictureFilename !== null ? (
                     <ProductImage
