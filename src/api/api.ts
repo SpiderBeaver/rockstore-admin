@@ -29,13 +29,20 @@ export async function getProduct(id: number) {
   }
 }
 
+export interface CreateProductParams {
+  product: {
+    name: string;
+    price: number;
+  };
+}
 // TODO: Move all funcitons to axios
-export async function createProduct({ name }: { name: string }) {
+export async function createProduct({ product }: CreateProductParams) {
   const response = await fetch('http://localhost:3001/products', {
     method: 'POST',
     body: JSON.stringify({
       product: {
-        name: name,
+        name: product.name,
+        price: product.price,
       },
     }),
     headers: {
@@ -43,8 +50,8 @@ export async function createProduct({ name }: { name: string }) {
     },
     mode: 'cors',
   });
-  const product = (await response.json()) as ProductDto;
-  return product;
+  const newProduct = (await response.json()) as ProductDto;
+  return newProduct;
 }
 
 interface EditProductParams {

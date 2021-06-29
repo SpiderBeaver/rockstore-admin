@@ -120,6 +120,7 @@ export default function ProductsTable() {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Picture</TableCell>
+              <TableCell>Price</TableCell>
               <TableCell>In Stock</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
@@ -138,6 +139,7 @@ export default function ProductsTable() {
                     ></ProductImage>
                   ) : null}
                 </LowPaddingTableCell>
+                <TableCell>{product.price.toFixed(2)}</TableCell>
                 <TableCell>12</TableCell>
                 <TableCell>
                   <Link to={`/products/${product.id}/edit`}>
