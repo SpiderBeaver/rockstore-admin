@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components/macro';
 import { getOrders } from '../api/api';
+import DataTable from './common/DataTable';
 
 const OrdersTableRoot = styled.div``;
 
@@ -16,6 +17,16 @@ export default function OrdersTable() {
 
   return (
     <OrdersTableRoot>
+      {ordersQuery.status === 'success' && (
+        <DataTable
+          items={ordersQuery.data}
+          columns={[
+            { name: 'Id', data: (order) => order.id.toString() },
+            { name: 'Products', data: (order) => order.items.map((item) => item.product.name).join(', ') },
+          ]}
+        ></DataTable>
+      )}
+
       <OrdersTableContainer>
         <Table>
           <TableHead>

@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import * as Yup from 'yup';
-import { useCreateProductMutation } from '../hooks/useCreateProductMutation';
-import ImageUploader from './ImageUploader';
+import { useCreateProductMutation } from '../../hooks/useCreateProductMutation';
+import ImageUploader from '../ImageUploader';
 
 const CardContainer = styled(Paper)`
   padding: 20px;

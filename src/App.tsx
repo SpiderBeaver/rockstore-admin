@@ -3,10 +3,10 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import EditProductCard from './components/EditProductCard';
-import NewProductCard from './components/NewProductCard';
+import EditProductCard from './components/products/EditProductCard';
+import NewProductCard from './components/products/NewProductCard';
 import OrdersCard from './components/OrdersCard';
-import ProductsCard from './components/ProductsCard';
+import ProductsCard from './components/products/ProductsCard';
 import Sidebar from './components/Sidebar';
 
 const Layout = styled.div`

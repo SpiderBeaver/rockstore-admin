@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components/macro';
-import ProductsTable from './ProductsTable';
+import ProductsTableView from './ProductsTableView';
 import { Link } from 'react-router-dom';
 
 const ProductsCardStyled = styled.div`
@@ -20,7 +20,7 @@ export default function ProductsCard() {
         </Button>
       </Link>
 
-      <ProductsTable></ProductsTable>
+      <ProductsTableView></ProductsTableView>
     </ProductsCardStyled>
   );
 }

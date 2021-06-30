@@ -5,9 +5,9 @@ import { useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import * as Yup from 'yup';
-import { getProduct } from '../api/api';
-import { useEditProductMutation } from '../hooks/useEditProductMutation';
-import ImageUploader from './ImageUploader';
+import { getProduct } from '../../api/api';
+import { useEditProductMutation } from '../../hooks/useEditProductMutation';
+import ImageUploader from '../ImageUploader';
 
 const CardContainer = styled(Paper)`
   padding: 20px;
