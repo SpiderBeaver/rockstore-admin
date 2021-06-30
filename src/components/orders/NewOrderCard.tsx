@@ -11,27 +11,6 @@ const CardContainer = styled(Paper)`
   padding: 20px;
 `;
 
-const products = [
-  {
-    id: 1,
-    name: 'Pepepg',
-    price: 23,
-    pictureFilename: '',
-  },
-  {
-    id: 1,
-    name: 'Pepepg',
-    price: 23,
-    pictureFilename: '',
-  },
-  {
-    id: 1,
-    name: 'Pepepg',
-    price: 23,
-    pictureFilename: '',
-  },
-];
-
 export default function NewOrderCard() {
   const [productIds, setProductIds] = useState<number[]>([]);
   const [selectProductDialogOpen, setSelectProductDialogOpen] = useState(false);
