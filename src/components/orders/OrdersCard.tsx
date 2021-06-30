@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import OrdersTable from './OrdersTable';
+import OrdersTableView from './OrdersTableView';
 
 const ProductsCardStyled = styled.div`
   background-color: #fff;
@@ -13,7 +13,7 @@ export default function OrdersCard() {
     <ProductsCardStyled>
       <h2>Orders</h2>
 
-      <OrdersTable></OrdersTable>
+      <OrdersTableView></OrdersTableView>
     </ProductsCardStyled>
   );
 }

@@ -115,7 +115,18 @@ export async function productRemovePicture(productId: number) {
   }
 }
 
-export async function getOrders() {
-  const response = await axios.get<OrderDto[]>('http://localhost:3001/orders');
+export interface GetOrdersParams {
+  limit?: number;
+  offset?: number;
+}
+export async function getOrders({ limit, offset }: GetOrdersParams) {
+  const response = await axios.get<OrderDto[]>('http://localhost:3001/orders', {
+    params: { limit: limit, offset: offset },
+  });
   return response.data;
+}
+
+export async function getOrdersCount() {
+  const response = await axios.get<{ count: number }>('http://localhost:3001/orders/count');
+  return response.data.count;
 }

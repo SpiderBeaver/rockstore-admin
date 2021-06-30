@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import EditProductCard from './components/products/EditProductCard';
 import NewProductCard from './components/products/NewProductCard';
-import OrdersCard from './components/OrdersCard';
+import OrdersCard from './components/orders/OrdersCard';
 import ProductsCard from './components/products/ProductsCard';
 import Sidebar from './components/Sidebar';
 
