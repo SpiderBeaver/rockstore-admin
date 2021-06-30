@@ -8,6 +8,7 @@ import NewProductCard from './components/products/NewProductCard';
 import OrdersCard from './components/orders/OrdersCard';
 import ProductsCard from './components/products/ProductsCard';
 import Sidebar from './components/Sidebar';
+import NewOrderCard from './components/orders/NewOrderCard';
 
 const Layout = styled.div`
   display: grid;
@@ -48,6 +49,9 @@ function App() {
                 </Route>
                 <Route path="/products">
                   <ProductsCard></ProductsCard>
+                </Route>
+                <Route path="/orders/new">
+                  <NewOrderCard></NewOrderCard>
                 </Route>
                 <Route path="/orders">
                   <OrdersCard></OrdersCard>
