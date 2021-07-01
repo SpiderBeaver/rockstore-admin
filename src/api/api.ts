@@ -130,3 +130,14 @@ export async function getOrdersCount() {
   const response = await axios.get<{ count: number }>('http://localhost:3001/orders/count');
   return response.data.count;
 }
+
+export async function deleteOrder(id: number) {
+  const response = await axios.post(`http://localhost:3001/orders/${id}/delete`);
+  if (response.status === 201) {
+    return;
+  } else if (response.status === 404) {
+    throw new Error('Order not found.');
+  } else {
+    // TODO: throw error
+  }
+}

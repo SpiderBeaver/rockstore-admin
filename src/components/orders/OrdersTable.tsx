@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React from 'react';
 import { OrderDto } from '../../api/dto/OrderDto';
 
@@ -14,6 +14,7 @@ export default function OrdersTable({ orders, onDelete }: OrdersTableProps) {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Products</TableCell>
+            <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -21,6 +22,11 @@ export default function OrdersTable({ orders, onDelete }: OrdersTableProps) {
             <TableRow key={order.id}>
               <TableCell>{order.id}</TableCell>
               <TableCell>{order.items.map((item) => item.product.name).join(', ')}</TableCell>
+              <TableCell align="right">
+                <Button size="small" color="secondary" onClick={() => onDelete(order)}>
+                  Delete
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
