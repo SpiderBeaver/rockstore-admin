@@ -54,7 +54,7 @@ export default function ProductsTable({ products, onDelete }: ProductsTableProps
                 ) : null}
               </LowPaddingTableCell>
               <TableCell>{product.price.toFixed(2)}</TableCell>
-              <TableCell>12</TableCell>
+              <TableCell>{product.inStock}</TableCell>
               <TableCell>
                 <Link to={`/products/${product.id}/edit`}>
                   <Button size="small">Edit</Button>

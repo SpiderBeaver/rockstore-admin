@@ -36,6 +36,7 @@ export interface CreateProductParams {
     sku: string;
     description?: string;
     price: number;
+    inStock: number;
   };
 }
 // TODO: Move all funcitons to axios
@@ -48,6 +49,7 @@ export async function createProduct({ product }: CreateProductParams) {
         sku: product.sku,
         description: product.description,
         price: product.price,
+        inStock: product.inStock,
       },
     }),
     headers: {
@@ -66,6 +68,7 @@ interface EditProductParams {
     sku?: string;
     description?: string;
     price?: number;
+    inStock?: number;
   };
 }
 export async function editProduct({ id, product }: EditProductParams) {
@@ -75,6 +78,7 @@ export async function editProduct({ id, product }: EditProductParams) {
       sku: product.sku,
       description: product.description,
       price: product.price,
+      inStock: product.inStock,
     },
   });
   if (response.status === 201) {

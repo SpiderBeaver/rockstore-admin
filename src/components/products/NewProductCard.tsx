@@ -16,6 +16,7 @@ interface NewProductFormValues {
   sku: string;
   description: string | undefined;
   price: string;
+  inStock: string;
 }
 
 export default function NewProductCard() {
@@ -32,6 +33,7 @@ export default function NewProductCard() {
     price: Yup.string()
       .required('Required')
       .matches(/^\d+(\.d+)?$/, 'Wrong format'),
+    inStock: Yup.string().required('Required').matches(/^\d+$/, 'Wrong format'),
   });
 
   const formik = useFormik<NewProductFormValues>({
@@ -40,15 +42,18 @@ export default function NewProductCard() {
       sku: '',
       description: undefined,
       price: '',
+      inStock: '1',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const priceParsed = parseFloat(values.price);
+      const inStockParsed = parseInt(values.inStock);
       createProductMutation.mutate({
         name: values.name,
         sku: values.sku,
         description: values.description,
         price: priceParsed,
+        inStock: inStockParsed,
         file: file,
       });
     },
@@ -86,6 +91,13 @@ export default function NewProductCard() {
           {...formik.getFieldProps('price')}
           error={formik.errors.price !== undefined && formik.touched.price}
           helperText={formik.errors.price}
+        ></TextField>
+        <TextField
+          label="In Stock"
+          variant="outlined"
+          {...formik.getFieldProps('inStock')}
+          error={formik.errors.inStock !== undefined && formik.touched.inStock}
+          helperText={formik.errors.inStock}
         ></TextField>
 
         <h2>Picture</h2>

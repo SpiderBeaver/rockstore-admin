@@ -18,6 +18,7 @@ interface EditProductFormValues {
   sku: string;
   description?: string;
   price: string;
+  inStock: string;
 }
 
 const validationSchema: Yup.SchemaOf<EditProductFormValues> = Yup.object({
@@ -27,6 +28,7 @@ const validationSchema: Yup.SchemaOf<EditProductFormValues> = Yup.object({
   price: Yup.string()
     .required('Required')
     .matches(/^\d+(\.\d+)?$/, 'Wrong format'),
+  inStock: Yup.string().required('Required').matches(/^\d+$/, 'Wrong format'),
 });
 
 export default function EditProductCard() {
@@ -49,17 +51,20 @@ export default function EditProductCard() {
       sku: product.data?.sku ?? '',
       description: product.data?.description ?? '',
       price: product.data?.price.toFixed(2) ?? '',
+      inStock: product.data?.inStock.toString() ?? '',
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const priceParsed = parseFloat(values.price);
+      const inStockParsed = parseInt(values.inStock);
       editProductMutation.mutate({
         id: productId,
         name: values.name,
         sku: values.sku,
         description: values.description,
         price: priceParsed,
+        inStock: inStockParsed,
         file: file,
       });
     },
@@ -101,6 +106,13 @@ export default function EditProductCard() {
               {...formik.getFieldProps('price')}
               error={formik.errors.price !== undefined && formik.touched.price}
               helperText={formik.errors.price}
+            ></TextField>
+            <TextField
+              label="In Stock"
+              variant="outlined"
+              {...formik.getFieldProps('inStock')}
+              error={formik.errors.inStock !== undefined && formik.touched.inStock}
+              helperText={formik.errors.inStock}
             ></TextField>
 
             <h2>Picture</h2>

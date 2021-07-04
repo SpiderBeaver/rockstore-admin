@@ -6,15 +6,16 @@ export interface CreateProductMutationParams {
   sku: string;
   description?: string;
   price: number;
+  inStock: number;
   file: File | null;
 }
 export function useCreateProductMutation(onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    async ({ name, sku, description, price, file }: CreateProductMutationParams) => {
+    async ({ name, sku, description, price, inStock, file }: CreateProductMutationParams) => {
       const newProduct = await createProduct({
-        product: { name: name, sku: sku, description: description, price: price },
+        product: { name: name, sku: sku, description: description, price: price, inStock: inStock },
       });
 
       if (file !== null) {

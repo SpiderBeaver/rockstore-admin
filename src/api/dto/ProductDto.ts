@@ -5,4 +5,5 @@ export interface ProductDto {
   description: string | null;
   pictureFilename: string;
   price: number;
+  inStock: number;
 }
