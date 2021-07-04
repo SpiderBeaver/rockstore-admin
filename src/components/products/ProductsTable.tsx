@@ -1,7 +1,17 @@
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import React from 'react';
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+} from '@material-ui/core';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { ProductSortField, SortOrder } from '../../api/api';
 import { ProductDto } from '../../api/dto/ProductDto';
 
 const ProductName = styled(Link)`
@@ -22,19 +32,40 @@ const ProductImage = styled.img`
 
 export interface ProductsTableProps {
   products: ProductDto[];
+  sortingColumn: ProductSortField;
+  sortingOrder: SortOrder;
+  onSortChange: (column: ProductSortField) => void;
   onDelete: (product: ProductDto) => void;
 }
-export default function ProductsTable({ products, onDelete }: ProductsTableProps) {
+export default function ProductsTable({
+  products,
+  sortingColumn,
+  sortingOrder,
+  onSortChange,
+  onDelete,
+}: ProductsTableProps) {
+  const TableSortableHeaderCell = ({ column, children }: { column: ProductSortField; children: React.ReactNode }) => (
+    <TableCell sortDirection={sortingColumn === column ? sortingOrder : false}>
+      <TableSortLabel
+        active={sortingColumn === column}
+        direction={sortingColumn === column ? sortingOrder : 'asc'}
+        onClick={() => onSortChange(column)}
+      >
+        {children}
+      </TableSortLabel>
+    </TableCell>
+  );
+
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>SKU</TableCell>
-            <TableCell>Name</TableCell>
+            <TableSortableHeaderCell column="sku">SKU</TableSortableHeaderCell>
+            <TableSortableHeaderCell column="name">Name</TableSortableHeaderCell>
             <TableCell>Picture</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>In Stock</TableCell>
+            <TableSortableHeaderCell column="price">Price</TableSortableHeaderCell>
+            <TableSortableHeaderCell column="inStock">In Stock</TableSortableHeaderCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>

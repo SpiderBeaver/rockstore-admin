@@ -1,6 +1,7 @@
 import { TableContainer, TablePagination } from '@material-ui/core';
 import React, { useState } from 'react';
 import styled from 'styled-components/macro';
+import { ProductSortField, SortOrder } from '../../api/api';
 import { ProductDto } from '../../api/dto/ProductDto';
 import { ITEMS_PER_TABLE_PAGE } from '../../constants';
 import { useDeleteProductMutation } from '../../hooks/useDeleteProductMutation';
@@ -24,13 +25,25 @@ const ProductsTableContainer = styled(TableContainer)`
 export default function ProductsTableView() {
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [sortingColumn, setSortingColumn] = useState<ProductSortField>('name');
+  const [sortingOrder, setSortingOrder] = useState<SortOrder>('asc');
+
   const [page, setPage] = useState(0);
 
-  const productsQuery = useProductsQuery(page, searchQuery);
+  const productsQuery = useProductsQuery(page, searchQuery, sortingColumn, sortingOrder);
   const productsCountQuery = useProductsCountQuery();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteDialogProduct, setDeleteDialogProduct] = useState<ProductDto | null>(null);
+
+  const handleSortingChange = (column: ProductSortField) => {
+    if (sortingColumn === column) {
+      setSortingOrder((order) => (order === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortingColumn(column);
+      setSortingOrder('asc');
+    }
+  };
 
   const handleDeleteButton = (product: ProductDto) => {
     setDeleteDialogProduct(product);
@@ -64,7 +77,13 @@ export default function ProductsTableView() {
           ></TablePagination>
 
           <ProductsTableContainer>
-            <ProductsTable products={productsQuery.data} onDelete={handleDeleteButton}></ProductsTable>
+            <ProductsTable
+              products={productsQuery.data}
+              sortingColumn={sortingColumn}
+              sortingOrder={sortingOrder}
+              onSortChange={handleSortingChange}
+              onDelete={handleDeleteButton}
+            ></ProductsTable>
           </ProductsTableContainer>
         </>
       ) : (

@@ -7,14 +7,18 @@ export async function getProductsCount() {
   return response.data.count;
 }
 
+export type ProductSortField = 'sku' | 'name' | 'price' | 'inStock';
+export type SortOrder = 'asc' | 'desc';
 export interface GetProductsParams {
   limit?: number;
   offset?: number;
   searchQuery?: string;
+  sortField?: ProductSortField;
+  sortOrder?: SortOrder;
 }
-export async function getProducts({ limit, offset, searchQuery }: GetProductsParams) {
+export async function getProducts({ limit, offset, searchQuery, sortField, sortOrder }: GetProductsParams) {
   const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
-    params: { limit: limit, offset: offset, query: searchQuery },
+    params: { limit: limit, offset: offset, query: searchQuery, sortField: sortField, sortOrder: sortOrder },
   });
   return response.data;
 }
