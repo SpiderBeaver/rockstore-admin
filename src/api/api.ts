@@ -141,3 +141,16 @@ export async function deleteOrder(id: number) {
     // TODO: throw error
   }
 }
+
+export interface CreateOrderParams {
+  order: {
+    products: {
+      id: number;
+      count: number;
+    }[];
+  };
+}
+export async function createOrder(params: CreateOrderParams) {
+  const order = await axios.post<OrderDto>('http://localhost:3001/orders', params.order);
+  return order;
+}
