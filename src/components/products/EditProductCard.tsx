@@ -15,11 +15,13 @@ const CardContainer = styled(Paper)`
 
 interface EditProductFormValues {
   name: string;
+  description?: string;
   price: string;
 }
 
 const validationSchema: Yup.SchemaOf<EditProductFormValues> = Yup.object({
   name: Yup.string().required('Required'),
+  description: Yup.string(),
   price: Yup.string()
     .required('Required')
     .matches(/^\d+(\.\d+)?$/, 'Wrong format'),
@@ -42,13 +44,20 @@ export default function EditProductCard() {
   const formik = useFormik<EditProductFormValues>({
     initialValues: {
       name: product.data?.name ?? '',
+      description: product.data?.description ?? '',
       price: product.data?.price.toFixed(2) ?? '',
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const priceParsed = parseFloat(values.price);
-      editProductMutation.mutate({ id: productId, name: values.name, price: priceParsed, file: file });
+      editProductMutation.mutate({
+        id: productId,
+        name: values.name,
+        description: values.description,
+        price: priceParsed,
+        file: file,
+      });
     },
   });
 
@@ -67,6 +76,13 @@ export default function EditProductCard() {
               {...formik.getFieldProps('name')}
               error={formik.errors.name !== undefined && formik.touched.name}
               helperText={formik.errors.name}
+            ></TextField>
+            <TextField
+              label="Descriptioin"
+              variant="outlined"
+              {...formik.getFieldProps('description')}
+              error={formik.errors.description !== undefined && formik.touched.description}
+              helperText={formik.errors.description}
             ></TextField>
             <TextField
               label="Price ($)"

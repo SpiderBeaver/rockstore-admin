@@ -33,6 +33,7 @@ export async function getProduct(id: number) {
 export interface CreateProductParams {
   product: {
     name: string;
+    description?: string;
     price: number;
   };
 }
@@ -43,6 +44,7 @@ export async function createProduct({ product }: CreateProductParams) {
     body: JSON.stringify({
       product: {
         name: product.name,
+        description: product.description,
         price: product.price,
       },
     }),
@@ -59,6 +61,7 @@ interface EditProductParams {
   id: number;
   product: {
     name?: string;
+    description?: string;
     price?: number;
   };
 }
@@ -66,6 +69,7 @@ export async function editProduct({ id, product }: EditProductParams) {
   const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/edit`, {
     product: {
       name: product.name,
+      description: product.description,
       price: product.price,
     },
   });
