@@ -30,6 +30,7 @@ export default function ProductsTable({ products, onDelete }: ProductsTableProps
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>SKU</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Picture</TableCell>
             <TableCell>Price</TableCell>
@@ -40,6 +41,7 @@ export default function ProductsTable({ products, onDelete }: ProductsTableProps
         <TableBody>
           {products.map((product) => (
             <TableRow key={product.id}>
+              <TableCell>{product.sku}</TableCell>
               <TableCell>
                 <ProductName to={`/products/${product.id}/edit`}>{product.name}</ProductName>
               </TableCell>

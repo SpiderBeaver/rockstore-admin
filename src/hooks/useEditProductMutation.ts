@@ -4,6 +4,7 @@ import { editProduct, productRemovePicture, productUploadPicture } from '../api/
 export interface EditProductMutationParams {
   id: number;
   name: string;
+  sku: string;
   description?: string;
   price: number;
   file: File | null | undefined;
@@ -12,8 +13,11 @@ export function useEditProductMutation(onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    async ({ id, name, description, price, file }: EditProductMutationParams) => {
-      const product = await editProduct({ id: id, product: { name: name, description: description, price: price } });
+    async ({ id, name, sku, description, price, file }: EditProductMutationParams) => {
+      const product = await editProduct({
+        id: id,
+        product: { name: name, sku: sku, description: description, price: price },
+      });
 
       if (product != null) {
         if (file !== null && file !== undefined) {

@@ -13,6 +13,7 @@ const CardContainer = styled(Paper)`
 
 interface NewProductFormValues {
   name: string;
+  sku: string;
   description: string | undefined;
   price: string;
 }
@@ -26,6 +27,7 @@ export default function NewProductCard() {
 
   const validationSchema: Yup.SchemaOf<NewProductFormValues> = Yup.object({
     name: Yup.string().required('Required'),
+    sku: Yup.string().required('Required'),
     description: Yup.string(),
     price: Yup.string()
       .required('Required')
@@ -35,6 +37,7 @@ export default function NewProductCard() {
   const formik = useFormik<NewProductFormValues>({
     initialValues: {
       name: '',
+      sku: '',
       description: undefined,
       price: '',
     },
@@ -43,6 +46,7 @@ export default function NewProductCard() {
       const priceParsed = parseFloat(values.price);
       createProductMutation.mutate({
         name: values.name,
+        sku: values.sku,
         description: values.description,
         price: priceParsed,
         file: file,
@@ -61,6 +65,13 @@ export default function NewProductCard() {
           {...formik.getFieldProps('name')}
           error={formik.errors.name !== undefined && formik.touched.name}
           helperText={formik.errors.name}
+        ></TextField>
+        <TextField
+          label="SKU"
+          variant="outlined"
+          {...formik.getFieldProps('sku')}
+          error={formik.errors.sku !== undefined && formik.touched.sku}
+          helperText={formik.errors.sku}
         ></TextField>
         <TextField
           label="Description"
