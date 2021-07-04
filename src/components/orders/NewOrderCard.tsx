@@ -11,20 +11,44 @@ const CardContainer = styled(Paper)`
   padding: 20px;
 `;
 
+interface OrderProduct {
+  productId: number;
+  count: number;
+}
+
 export default function NewOrderCard() {
-  const [productIds, setProductIds] = useState<number[]>([]);
+  const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
   const [selectProductDialogOpen, setSelectProductDialogOpen] = useState(false);
 
   const handleSelectProduct = (productId: number) => {
-    setProductIds((state) => (!state.includes(productId) ? [productId, ...state] : state));
+    setOrderProducts((state) =>
+      !state.some((product) => product.productId === productId) ? [{ productId: productId, count: 1 }, ...state] : state
+    );
+  };
+
+  const handleProductCountChange = (productId: number, count: number) => {
+    setOrderProducts((state) => {
+      const productIndex = state.findIndex((p) => p.productId === productId);
+      if (productIndex !== -1) {
+        const product = state[productIndex];
+        const newProduct = { ...product, count: count };
+        const newState = [...state];
+        newState[productIndex] = newProduct;
+        return newState;
+      }
+      return state;
+    });
   };
 
   const productQueries = useQueries(
-    productIds.map((productId) => ({
-      queryKey: ['product', productId],
-      queryFn: async () => await getProduct(productId),
+    orderProducts.map((product) => ({
+      queryKey: ['product', product.productId],
+      queryFn: async () => await getProduct(product.productId),
     }))
   ) as UseQueryResult<ProductDto>[];
+
+  /** Not null when all the products are successfully fetched. */
+  const productsData = productQueries.every((q) => q.status === 'success') ? productQueries.map((q) => q.data!) : null;
 
   return (
     <>
@@ -35,8 +59,14 @@ export default function NewOrderCard() {
           Add Product
         </Button>
 
-        {productQueries.every((q) => q.status === 'success') && (
-          <OrderProductsTable products={productQueries.map((q) => q.data!)}></OrderProductsTable>
+        {productsData !== null && (
+          <OrderProductsTable
+            products={orderProducts.map((orderProduct) => ({
+              count: orderProduct.count,
+              ...productsData.find((p) => p.id === orderProduct.productId)!,
+            }))}
+            onProductCountChange={handleProductCountChange}
+          ></OrderProductsTable>
         )}
       </CardContainer>
 
