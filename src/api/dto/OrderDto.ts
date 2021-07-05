@@ -8,4 +8,5 @@ export interface OrderDto {
       price: number;
     };
   }[];
+  createdAt: Date;
 }

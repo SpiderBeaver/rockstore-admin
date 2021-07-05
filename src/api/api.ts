@@ -139,7 +139,18 @@ export async function getOrders({ limit, offset }: GetOrdersParams) {
   const response = await axios.get<OrderDto[]>('http://localhost:3001/orders', {
     params: { limit: limit, offset: offset },
   });
-  return response.data;
+  const orders = response.data.map((orderData) => {
+    const order: OrderDto = {
+      ...orderData,
+      // TODO: This is kinda bad. The reason is that the server actually sends the date as string.
+      // And it does not care that we have Date in our DTO object.
+      // The actual solution would be to have two different data structures.
+      // One for what actually comes from the server. And the other to return from api module.
+      createdAt: new Date(orderData.createdAt as unknown as string),
+    };
+    return order;
+  });
+  return orders;
 }
 
 export async function getOrdersCount() {
