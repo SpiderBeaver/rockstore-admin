@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OrderDto } from './dto/OrderDto';
+import { OrderDto, OrderStatus } from './dto/OrderDto';
 import { ProductDto } from './dto/ProductDto';
 
 export async function getProductsCount() {
@@ -212,6 +212,7 @@ export interface UpdateOrderParams {
       phoneNumber: string;
       address: string;
     };
+    status: OrderStatus;
   };
 }
 export async function updateOrder(params: UpdateOrderParams) {

@@ -1,3 +1,10 @@
+export enum OrderStatus {
+  New = 'NEW',
+  Processing = 'PROCESSING',
+  Completed = 'COMPLETED',
+  Cancelled = 'CANCELLED',
+}
+
 export interface OrderDto {
   id: number;
   items: {
@@ -15,5 +22,6 @@ export interface OrderDto {
     phoneNumber: string;
     address: string;
   };
+  status: OrderStatus;
   createdAt: Date;
 }

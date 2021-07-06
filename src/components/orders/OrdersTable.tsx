@@ -18,6 +18,7 @@ export default function OrdersTable({ orders, onDelete }: OrdersTableProps) {
             <TableCell>Id</TableCell>
             <TableCell>Products</TableCell>
             <TableCell>Created At</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -27,6 +28,7 @@ export default function OrdersTable({ orders, onDelete }: OrdersTableProps) {
               <TableCell>{order.id}</TableCell>
               <TableCell>{order.items.map((item) => item.product.name).join(', ')}</TableCell>
               <TableCell>{format(order.createdAt, 'Pp')}</TableCell>
+              <TableCell>{order.status}</TableCell>
               <TableCell align="right">
                 <Link to={`/orders/${order.id}/edit`}>
                   <Button size="small">Edit</Button>

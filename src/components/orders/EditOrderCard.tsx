@@ -1,4 +1,4 @@
-import { Button, Paper } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Paper, Select } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useUpdateOrderMutation } from '../../hooks/useUpdateOrderMutation';
 import SelectProductDialog from './SelectProductDialog';
+import { OrderStatus } from '../../api/dto/OrderDto';
 
 const CardContainer = styled(Paper)`
   padding: 20px;
@@ -22,6 +23,7 @@ interface OrderProduct {
 
 interface EditOrderFormValues {
   client: OrderClientValues;
+  status: OrderStatus | null;
 }
 
 export default function EditOrderCard() {
@@ -44,6 +46,7 @@ export default function EditOrderCard() {
 
   const validationSchema: Yup.SchemaOf<EditOrderFormValues> = Yup.object({
     client: orderClientValuesValidationSchema,
+    status: Yup.mixed<OrderStatus | null>().defined(),
   });
 
   const formik = useFormik<EditOrderFormValues>({
@@ -54,6 +57,7 @@ export default function EditOrderCard() {
         address: order.data?.client.address ?? '',
         phoneNumber: order.data?.client.phoneNumber ?? '',
       },
+      status: order.data?.status ?? null,
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
@@ -68,6 +72,7 @@ export default function EditOrderCard() {
             address: values.client.address,
             phoneNumber: values.client.phoneNumber,
           },
+          status: values.status!,
         },
       });
     },
@@ -116,6 +121,18 @@ export default function EditOrderCard() {
               errors={formik.errors.client}
               touched={formik.touched.client}
             ></OrderClientFormFields>
+          </div>
+
+          <div>
+            <h2>Status</h2>
+            {order.status === 'success' && order.data && (
+              <Select variant="outlined" label="Status" {...formik.getFieldProps('status')}>
+                <MenuItem value={OrderStatus.New}>New</MenuItem>
+                <MenuItem value={OrderStatus.Processing}>Processing</MenuItem>
+                <MenuItem value={OrderStatus.Completed}>Completed</MenuItem>
+                <MenuItem value={OrderStatus.Cancelled}>Cancelled</MenuItem>
+              </Select>
+            )}
           </div>
 
           <Button type="submit" variant="contained" color="primary">
