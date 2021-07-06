@@ -8,7 +8,7 @@ import {
   TableRow,
   TableSortLabel,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { ProductSortField, SortOrder } from '../../api/api';
@@ -22,12 +22,8 @@ const ProductName = styled(Link)`
   }
 `;
 
-const LowPaddingTableCell = styled(TableCell)`
-  padding: 8px;
-`;
-
 const ProductImage = styled.img`
-  max-height: 30px;
+  max-height: 56px;
 `;
 
 export interface ProductsTableProps {
@@ -76,14 +72,14 @@ export default function ProductsTable({
               <TableCell>
                 <ProductName to={`/products/${product.id}/edit`}>{product.name}</ProductName>
               </TableCell>
-              <LowPaddingTableCell>
+              <TableCell padding="none">
                 {product.pictureFilename !== null ? (
                   <ProductImage
                     src={`http://localhost:3001/uploads/${product.pictureFilename}`}
                     alt={product.name}
                   ></ProductImage>
                 ) : null}
-              </LowPaddingTableCell>
+              </TableCell>
               <TableCell>{product.price.toFixed(2)}</TableCell>
               <TableCell>{product.inStock}</TableCell>
               <TableCell>
