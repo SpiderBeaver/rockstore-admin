@@ -153,6 +153,17 @@ export async function getOrders({ limit, offset }: GetOrdersParams) {
   return orders;
 }
 
+export async function getOrder(id: number) {
+  const response = await axios.get<OrderDto>(`http://localhost:3001/orders/${id}`);
+  if (response.status === 200) {
+    return response.data;
+  } else if (response.status === 404) {
+    return null;
+  } else {
+    // TODO: throw error
+  }
+}
+
 export async function getOrdersCount() {
   const response = await axios.get<{ count: number }>('http://localhost:3001/orders/count');
   return response.data.count;
@@ -185,5 +196,25 @@ export interface CreateOrderParams {
 }
 export async function createOrder(params: CreateOrderParams) {
   const order = await axios.post<OrderDto>('http://localhost:3001/orders', params.order);
+  return order;
+}
+
+export interface UpdateOrderParams {
+  orderId: number;
+  orderData: {
+    products?: {
+      id: number;
+      count: number;
+    }[];
+    client?: {
+      name: string;
+      email: string;
+      phoneNumber: string;
+      address: string;
+    };
+  };
+}
+export async function updateOrder(params: UpdateOrderParams) {
+  const order = await axios.post<OrderDto>(`http://localhost:3001/orders/${params.orderId}/edit`, params.orderData);
   return order;
 }

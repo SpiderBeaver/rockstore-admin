@@ -1,12 +1,14 @@
 import { Button, Paper } from '@material-ui/core';
-import { useFormik } from 'formik';
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import * as Yup from 'yup';
-import { useCreateOrderMutation } from '../../hooks/useCreateOrderMutation';
+import { getOrder } from '../../api/api';
 import OrderClientFormFields, { OrderClientValues, orderClientValuesValidationSchema } from './OrderClientFormFields';
 import OrderProductsTable from './OrderProductsTable';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { useUpdateOrderMutation } from '../../hooks/useUpdateOrderMutation';
 import SelectProductDialog from './SelectProductDialog';
 
 const CardContainer = styled(Paper)`
@@ -18,17 +20,58 @@ interface OrderProduct {
   count: number;
 }
 
-interface NewOrderFormValues {
+interface EditOrderFormValues {
   client: OrderClientValues;
 }
 
-export default function NewOrderCard() {
-  const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
+export default function EditOrderCard() {
+  const { orderId: orderIdString } = useParams<{ orderId: string }>();
+  const orderId = parseInt(orderIdString);
+
   const [selectProductDialogOpen, setSelectProductDialogOpen] = useState(false);
+  const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
+
+  const order = useQuery(['order', orderId], () => getOrder(orderId));
+  useEffect(() => {
+    if (order.status === 'success' && order.data) {
+      setOrderProducts(order.data.items.map((item) => ({ id: item.product.id, count: item.count })));
+    }
+  }, [order.status, order.data]);
 
   const history = useHistory();
   // TODO: Try .mutateAsync instead on onSuccess callbacks.
-  const createOrderMutation = useCreateOrderMutation(() => history.push('/orders'));
+  const updateOrderMutation = useUpdateOrderMutation(() => history.push('/orders'));
+
+  const validationSchema: Yup.SchemaOf<EditOrderFormValues> = Yup.object({
+    client: orderClientValuesValidationSchema,
+  });
+
+  const formik = useFormik<EditOrderFormValues>({
+    initialValues: {
+      client: {
+        name: order.data?.client.name ?? '',
+        email: order.data?.client.email ?? '',
+        address: order.data?.client.address ?? '',
+        phoneNumber: order.data?.client.phoneNumber ?? '',
+      },
+    },
+    enableReinitialize: true,
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      updateOrderMutation.mutate({
+        orderId: orderId,
+        orderData: {
+          products: orderProducts,
+          client: {
+            name: values.client.name,
+            email: values.client.email,
+            address: values.client.address,
+            phoneNumber: values.client.phoneNumber,
+          },
+        },
+      });
+    },
+  });
 
   const handleSelectProduct = (productId: number) => {
     setOrderProducts((state) =>
@@ -50,39 +93,10 @@ export default function NewOrderCard() {
     });
   };
 
-  const validationSchema: Yup.SchemaOf<NewOrderFormValues> = Yup.object({
-    client: orderClientValuesValidationSchema,
-  });
-
-  const formik = useFormik<NewOrderFormValues>({
-    initialValues: {
-      client: {
-        name: '',
-        email: '',
-        address: '',
-        phoneNumber: '',
-      },
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      createOrderMutation.mutate({
-        order: {
-          products: orderProducts,
-          client: {
-            name: values.client.name,
-            email: values.client.email,
-            address: values.client.address,
-            phoneNumber: values.client.phoneNumber,
-          },
-        },
-      });
-    },
-  });
-
   return (
     <>
       <CardContainer>
-        <h1>New Order</h1>
+        <h1>Edit Order</h1>
 
         <form onSubmit={formik.handleSubmit}>
           <Button variant="contained" color="primary" onClick={() => setSelectProductDialogOpen(true)}>
@@ -105,7 +119,7 @@ export default function NewOrderCard() {
           </div>
 
           <Button type="submit" variant="contained" color="primary">
-            Create new order
+            Save changes
           </Button>
         </form>
       </CardContainer>

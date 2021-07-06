@@ -7,6 +7,13 @@ export interface OrderDto {
       pictureFilename: string | null;
       price: number;
     };
+    count: number;
   }[];
+  client: {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+  };
   createdAt: Date;
 }
