@@ -3,7 +3,7 @@ export interface ProductDto {
   name: string;
   sku: string;
   description: string | null;
-  pictureFilename: string;
+  pictureFilename: string | null;
   price: number;
   inStock: number;
 }

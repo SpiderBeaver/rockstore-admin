@@ -175,6 +175,12 @@ export interface CreateOrderParams {
       id: number;
       count: number;
     }[];
+    client: {
+      name: string;
+      email: string;
+      phoneNumber: string;
+      address: string;
+    };
   };
 }
 export async function createOrder(params: CreateOrderParams) {

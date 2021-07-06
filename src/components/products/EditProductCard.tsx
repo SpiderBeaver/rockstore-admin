@@ -118,7 +118,7 @@ export default function EditProductCard() {
             <h2>Picture</h2>
             <ImageUploader
               onImageSelect={(file) => setFile(file)}
-              initialImageFilename={product.data?.pictureFilename}
+              initialImageFilename={product.data?.pictureFilename ?? undefined}
             ></ImageUploader>
 
             <Button type="submit" variant="contained" color="primary">
