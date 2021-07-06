@@ -134,10 +134,11 @@ export async function productRemovePicture(productId: number) {
 export interface GetOrdersParams {
   limit?: number;
   offset?: number;
+  status?: OrderStatus;
 }
-export async function getOrders({ limit, offset }: GetOrdersParams) {
+export async function getOrders({ limit, offset, status }: GetOrdersParams) {
   const response = await axios.get<OrderDto[]>('http://localhost:3001/orders', {
-    params: { limit: limit, offset: offset },
+    params: { limit: limit, offset: offset, status: status },
   });
   const orders = response.data.map((orderData) => {
     const order: OrderDto = {
