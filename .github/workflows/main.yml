@@ -26,6 +26,6 @@ jobs:
           push: true
           tags: spdrbeaver/rockstore-admin:rockstore.spiderbeaver.com
           build-args: |
-            api_url=https://rockstore.spiderbeaver.com
+            api_url=https://api.rockstore.spiderbeaver.com
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
