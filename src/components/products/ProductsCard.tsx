@@ -1,26 +1,26 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
-import styled from 'styled-components/macro';
-import ProductsTableView from './ProductsTableView';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
+import ProductsTableView from './ProductsTableView';
 
-const ProductsCardStyled = styled.div`
-  background-color: #fff;
-  padding: 1em;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+const NewProductButton = styled(Button)`
+  margin-bottom: 2em;
 `;
 
 export default function ProductsCard() {
   return (
-    <ProductsCardStyled>
-      <h2>Products</h2>
+    <Section>
+      <SectionHeading>Products</SectionHeading>
       <Link to="/products/new">
-        <Button variant="contained" color="primary">
+        <NewProductButton variant="contained" color="primary">
           New Product
-        </Button>
+        </NewProductButton>
       </Link>
 
       <ProductsTableView></ProductsTableView>
-    </ProductsCardStyled>
+    </Section>
   );
 }

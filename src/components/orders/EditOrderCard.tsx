@@ -1,20 +1,17 @@
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select } from '@material-ui/core';
+import { Button, MenuItem, Select } from '@material-ui/core';
+import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import * as Yup from 'yup';
 import { getOrder } from '../../api/api';
+import { OrderStatus } from '../../api/dto/OrderDto';
+import { useUpdateOrderMutation } from '../../hooks/useUpdateOrderMutation';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
 import OrderClientFormFields, { OrderClientValues, orderClientValuesValidationSchema } from './OrderClientFormFields';
 import OrderProductsTable from './OrderProductsTable';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
-import { useUpdateOrderMutation } from '../../hooks/useUpdateOrderMutation';
 import SelectProductDialog from './SelectProductDialog';
-import { OrderStatus } from '../../api/dto/OrderDto';
-
-const CardContainer = styled(Paper)`
-  padding: 20px;
-`;
 
 interface OrderProduct {
   id: number;
@@ -100,8 +97,8 @@ export default function EditOrderCard() {
 
   return (
     <>
-      <CardContainer>
-        <h1>Edit Order</h1>
+      <Section>
+        <SectionHeading>Edit Order</SectionHeading>
 
         <form onSubmit={formik.handleSubmit}>
           <Button variant="contained" color="primary" onClick={() => setSelectProductDialogOpen(true)}>
@@ -139,7 +136,7 @@ export default function EditOrderCard() {
             Save changes
           </Button>
         </form>
-      </CardContainer>
+      </Section>
 
       <SelectProductDialog
         open={selectProductDialogOpen}

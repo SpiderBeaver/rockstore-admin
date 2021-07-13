@@ -1,17 +1,14 @@
-import { Button, Paper } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components/macro';
 import * as Yup from 'yup';
 import { useCreateOrderMutation } from '../../hooks/useCreateOrderMutation';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
 import OrderClientFormFields, { OrderClientValues, orderClientValuesValidationSchema } from './OrderClientFormFields';
 import OrderProductsTable from './OrderProductsTable';
 import SelectProductDialog from './SelectProductDialog';
-
-const CardContainer = styled(Paper)`
-  padding: 20px;
-`;
 
 interface OrderProduct {
   id: number;
@@ -81,8 +78,8 @@ export default function NewOrderCard() {
 
   return (
     <>
-      <CardContainer>
-        <h1>New Order</h1>
+      <Section>
+        <SectionHeading>New Order</SectionHeading>
 
         <form onSubmit={formik.handleSubmit}>
           <Button variant="contained" color="primary" onClick={() => setSelectProductDialogOpen(true)}>
@@ -108,7 +105,7 @@ export default function NewOrderCard() {
             Create new order
           </Button>
         </form>
-      </CardContainer>
+      </Section>
 
       <SelectProductDialog
         open={selectProductDialogOpen}

@@ -1,19 +1,14 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components/macro';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
 import OrdersTableView from './OrdersTableView';
-
-const ProductsCardStyled = styled.div`
-  background-color: #fff;
-  padding: 1em;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-`;
 
 export default function OrdersCard() {
   return (
-    <ProductsCardStyled>
-      <h2>Orders</h2>
+    <Section>
+      <SectionHeading>Orders</SectionHeading>
 
       <Link to="/orders/new">
         <Button variant="contained" color="primary">
@@ -22,6 +17,6 @@ export default function OrdersCard() {
       </Link>
 
       <OrdersTableView></OrdersTableView>
-    </ProductsCardStyled>
+    </Section>
   );
 }

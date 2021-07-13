@@ -1,17 +1,14 @@
-import { Button, Paper, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import styled from 'styled-components/macro';
 import * as Yup from 'yup';
 import { getProduct } from '../../api/api';
 import { useEditProductMutation } from '../../hooks/useEditProductMutation';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
 import ImageUploader from '../ImageUploader';
-
-const CardContainer = styled(Paper)`
-  padding: 20px;
-`;
 
 interface EditProductFormValues {
   name: string;
@@ -71,12 +68,12 @@ export default function EditProductCard() {
   });
 
   return (
-    <CardContainer>
+    <Section>
       {product.status === 'loading' ? (
         <p>Loading...</p>
       ) : (
         <>
-          <h1>Edit Product</h1>
+          <SectionHeading>Edit Product</SectionHeading>
 
           <form onSubmit={formik.handleSubmit}>
             <TextField
@@ -115,7 +112,7 @@ export default function EditProductCard() {
               helperText={formik.errors.inStock}
             ></TextField>
 
-            <h2>Picture</h2>
+            <h3>Picture</h3>
             <ImageUploader
               onImageSelect={(file) => setFile(file)}
               initialImageFilename={product.data?.pictureFilename ?? undefined}
@@ -127,6 +124,6 @@ export default function EditProductCard() {
           </form>
         </>
       )}
-    </CardContainer>
+    </Section>
   );
 }

@@ -1,15 +1,12 @@
-import { Button, Paper, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components/macro';
 import * as Yup from 'yup';
 import { useCreateProductMutation } from '../../hooks/useCreateProductMutation';
+import Section from '../common/Section';
+import SectionHeading from '../common/SectionHeading';
 import ImageUploader from '../ImageUploader';
-
-const CardContainer = styled(Paper)`
-  padding: 20px;
-`;
 
 interface NewProductFormValues {
   name: string;
@@ -60,8 +57,8 @@ export default function NewProductCard() {
   });
 
   return (
-    <CardContainer>
-      <h1>New Product</h1>
+    <Section>
+      <SectionHeading>New Product</SectionHeading>
 
       <form onSubmit={formik.handleSubmit}>
         <TextField
@@ -100,13 +97,13 @@ export default function NewProductCard() {
           helperText={formik.errors.inStock}
         ></TextField>
 
-        <h2>Picture</h2>
+        <h3>Picture</h3>
         <ImageUploader onImageSelect={(file) => setFile(file)}></ImageUploader>
 
         <Button type="submit" variant="contained" color="primary">
           Create new product
         </Button>
       </form>
-    </CardContainer>
+    </Section>
   );
 }
