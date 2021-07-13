@@ -4,6 +4,8 @@ import { useReadDataUrl } from '../hooks/useReadDataUrl';
 import UploadFileButton from './UploadFileButton';
 import ClearIcon from '@material-ui/icons/Clear';
 
+const baseApiUrl = process.env.REACT_APP_API_URL;
+
 const RemovePictureButton = styled(ClearIcon)`
   display: none;
   position: absolute;
@@ -78,7 +80,7 @@ export default function ImageUploader({ onImageSelect, initialImageFilename }: I
         {pictureDataUrl !== null ? (
           <Picture src={pictureDataUrl}></Picture>
         ) : imageFilename !== null ? (
-          <Picture src={`http://localhost:3001/uploads/${imageFilename}`}></Picture>
+          <Picture src={`${baseApiUrl}/uploads/${imageFilename}`}></Picture>
         ) : null}
         <RemovePictureButton onClick={handleRemovePicture}></RemovePictureButton>
       </PictureContainer>

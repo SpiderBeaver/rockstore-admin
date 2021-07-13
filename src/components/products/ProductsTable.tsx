@@ -14,6 +14,8 @@ import styled from 'styled-components/macro';
 import { ProductSortField, SortOrder } from '../../api/api';
 import { ProductDto } from '../../api/dto/ProductDto';
 
+const baseApiUrl = process.env.REACT_APP_API_URL;
+
 const ProductName = styled(Link)`
   text-decoration: none;
   color: #000000;
@@ -75,7 +77,7 @@ export default function ProductsTable({
               <TableCell padding="none">
                 {product.pictureFilename !== null ? (
                   <ProductImage
-                    src={`http://localhost:3001/uploads/${product.pictureFilename}`}
+                    src={`${baseApiUrl}/uploads/${product.pictureFilename}`}
                     alt={product.name}
                   ></ProductImage>
                 ) : null}

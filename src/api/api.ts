@@ -2,8 +2,10 @@ import axios from 'axios';
 import { OrderDto, OrderStatus } from './dto/OrderDto';
 import { ProductDto } from './dto/ProductDto';
 
+const baseApiUrl = process.env.REACT_APP_API_URL;
+
 export async function getProductsCount() {
-  const response = await axios.get<{ count: number }>('http://localhost:3001/products/count');
+  const response = await axios.get<{ count: number }>(`${baseApiUrl}/products/count`);
   return response.data.count;
 }
 
@@ -17,14 +19,14 @@ export interface GetProductsParams {
   sortOrder?: SortOrder;
 }
 export async function getProducts({ limit, offset, searchQuery, sortField, sortOrder }: GetProductsParams) {
-  const response = await axios.get<ProductDto[]>('http://localhost:3001/products', {
+  const response = await axios.get<ProductDto[]>(`${baseApiUrl}/products`, {
     params: { limit: limit, offset: offset, query: searchQuery, sortField: sortField, sortOrder: sortOrder },
   });
   return response.data;
 }
 
 export async function getProduct(id: number) {
-  const response = await axios.get<ProductDto>(`http://localhost:3001/products/${id}`);
+  const response = await axios.get<ProductDto>(`${baseApiUrl}/products/${id}`);
   if (response.status === 200) {
     return response.data;
   } else if (response.status === 404) {
@@ -45,7 +47,7 @@ export interface CreateProductParams {
 }
 // TODO: Move all funcitons to axios
 export async function createProduct({ product }: CreateProductParams) {
-  const response = await fetch('http://localhost:3001/products', {
+  const response = await fetch(`${baseApiUrl}/products`, {
     method: 'POST',
     body: JSON.stringify({
       product: {
@@ -76,7 +78,7 @@ interface EditProductParams {
   };
 }
 export async function editProduct({ id, product }: EditProductParams) {
-  const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/edit`, {
+  const response = await axios.post<ProductDto>(`${baseApiUrl}/products/${id}/edit`, {
     product: {
       name: product.name,
       sku: product.sku,
@@ -95,7 +97,7 @@ export async function editProduct({ id, product }: EditProductParams) {
 }
 
 export async function deleteProduct(id: number) {
-  const response = await axios.post<ProductDto>(`http://localhost:3001/products/${id}/delete`);
+  const response = await axios.post<ProductDto>(`${baseApiUrl}/products/${id}/delete`);
   if (response.status === 201) {
     return response.data;
   } else if (response.status === 404) {
@@ -109,7 +111,7 @@ export async function productUploadPicture({ productId, file }: { productId: num
   const formData = new FormData();
   formData.append('file', file as Blob);
 
-  const uploadUrl = `http://localhost:3001/products/${productId}/picture`;
+  const uploadUrl = `${baseApiUrl}/products/${productId}/picture`;
   const uploadResponse = await fetch(uploadUrl, {
     method: 'POST',
     body: formData,
@@ -119,7 +121,7 @@ export async function productUploadPicture({ productId, file }: { productId: num
 }
 
 export async function productRemovePicture(productId: number) {
-  const url = `http://localhost:3001/products/${productId}/picture/delete`;
+  const url = `${baseApiUrl}/products/${productId}/picture/delete`;
   const response = await axios.post<ProductDto>(url);
   if (response.status === 201) {
     return response.data;
@@ -137,7 +139,7 @@ export interface GetOrdersParams {
   status?: OrderStatus;
 }
 export async function getOrders({ limit, offset, status }: GetOrdersParams) {
-  const response = await axios.get<OrderDto[]>('http://localhost:3001/orders', {
+  const response = await axios.get<OrderDto[]>(`${baseApiUrl}/orders`, {
     params: { limit: limit, offset: offset, status: status },
   });
   const orders = response.data.map((orderData) => {
@@ -155,7 +157,7 @@ export async function getOrders({ limit, offset, status }: GetOrdersParams) {
 }
 
 export async function getOrder(id: number) {
-  const response = await axios.get<OrderDto>(`http://localhost:3001/orders/${id}`);
+  const response = await axios.get<OrderDto>(`${baseApiUrl}/orders/${id}`);
   if (response.status === 200) {
     return response.data;
   } else if (response.status === 404) {
@@ -166,12 +168,12 @@ export async function getOrder(id: number) {
 }
 
 export async function getOrdersCount() {
-  const response = await axios.get<{ count: number }>('http://localhost:3001/orders/count');
+  const response = await axios.get<{ count: number }>(`${baseApiUrl}/orders/count`);
   return response.data.count;
 }
 
 export async function deleteOrder(id: number) {
-  const response = await axios.post(`http://localhost:3001/orders/${id}/delete`);
+  const response = await axios.post(`${baseApiUrl}/orders/${id}/delete`);
   if (response.status === 201) {
     return;
   } else if (response.status === 404) {
@@ -196,7 +198,7 @@ export interface CreateOrderParams {
   };
 }
 export async function createOrder(params: CreateOrderParams) {
-  const order = await axios.post<OrderDto>('http://localhost:3001/orders', params.order);
+  const order = await axios.post<OrderDto>(`${baseApiUrl}/orders`, params.order);
   return order;
 }
 
@@ -217,6 +219,6 @@ export interface UpdateOrderParams {
   };
 }
 export async function updateOrder(params: UpdateOrderParams) {
-  const order = await axios.post<OrderDto>(`http://localhost:3001/orders/${params.orderId}/edit`, params.orderData);
+  const order = await axios.post<OrderDto>(`${baseApiUrl}/orders/${params.orderId}/edit`, params.orderData);
   return order;
 }
